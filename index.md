@@ -2,11 +2,12 @@
 title: Home
 layout: common
 language: ja
+docs: ita
 page_class: home
 page_name: index
 description: Exastro IT Automationはシステム設定をデジタル化して一元管理するためのオープンソースのフレームワークです。
 ---
-<link rel="stylesheet" href="/exastro-it-automation-docs/assets/css/software_home.css">
+<link rel="stylesheet" href="/assets/css/software_home.css">
 
 <!--
 ##################################################
@@ -79,7 +80,7 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
 </div>
 
 <div class="section-image">
-    <figure class="loupe touch"><img src="https://exastro-suite.github.io/it-automation-docs/asset/img/system_overview.png" alt="概要図"></figure>
+    <figure class="loupe touch"><img src="/assets/img/logo_image.png" alt="Exastro IT Automation"></figure>
 </div>
 
 </div>
