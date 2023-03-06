@@ -40,7 +40,7 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
             <!-- <li class="header-menu-item"><a href="https://ita-docs.exastro.org/2.0/ja/learn/" class="header-link touch"> -->
             <li class="header-menu-item"><span class="header-nolink">
                 <i class="fas fa-school"></i>
-                <span class="header-link-sub">Documents</span>
+                <!-- <span class="header-link-sub">Documents</span> -->
                 <span class="header-link-main">Learn</span>
                 <span class="header-link-coming-soon">Coming Soon...</span>
             </span></li>
@@ -75,16 +75,16 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
 <div class="section-container">
 <div class="section-main">
     <h2 class="section-h2"><strong class="software-name">Exastro IT Automation</strong>とは？</h2>
-    <p class="section-p">Exastro IT Automation は、システム構築や運用の自動化/効率化/省力化を目的としたシステムの構成管理のためのフレームワークです。</p>
+    <p class="section-p">Exastro IT Automation は、システム構築や運用業務の自動化/効率化/省力化を目的としたシステムの構成管理のためのフレームワークです。</p>
     <h3 class="section-h3">システム構築/運用は情報の一元管理が要！</h3>
     <p class="section-p">Exastro IT Automation は、情報連携のミスやチーム間の情報伝達のコストを抑えるために、システムの構成情報であるパラメータや手順(IaC)を一元的に管理する仕組みを提供します。また、CMDB 上にシステムの過去・現在・未来のパラメータ情報を格納でき、作業手順書である IaC にパラメータを連携することで IaC の再利用性を高めることができます。</p>
     <h2 class="section-h2">Ver. 2 で何が変わったのか？</h2>
     <h3 class="section-h3">マルチテナンシー対応</h3>
     <p class="section-p">複数の組織やプロジェクトを1つの Exastro IT Automation 上にテナントとして管理できるため、コンピュータリソースを効率的に利用できます。また、データ領域はテナント毎に隔離されているため情報の機密性が保たれています。</p>
     <h3 class="section-h3">ワークスペース機能</h3>
-    <p class="section-p">システムのパラメータ、設定ファイル、自動化ソフトウェアの IaC といった、システムを構成・管理・維持するために必要な情報を一元管理するための作業領域としてワークスペース機能を提供しています。このワークスペース機能を利用することで異なる複数のシステムを同時に管理することが可能です。</p>
+    <p class="section-p">システムのパラメータ、設定ファイル、自動化ソフトウェアの IaC といった、システムを構成・管理・維持するために必要な情報を一元管理するための作業領域としてワークスペース機能を提供しています。このワークスペース機能を利用することで複数のシステムを容易に管理できます。</p>
     <h3 class="section-h3">Restful API</h3>
-    <p class="section-p">Restful API によりサードパーティ制のアプリケーションとスムーズにの連携が可能です。</p>
+    <p class="section-p">Restful API によりサードパーティ製のアプリケーションとスムーズに連携が可能です。</p>
 </div>
 
 <div class="section-image">
