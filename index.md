@@ -7,7 +7,7 @@ page_class: home
 page_name: index
 description: Exastro IT Automationはシステム設定をデジタル化して一元管理するためのオープンソースのフレームワークです。
 ---
-<link rel="stylesheet" href="/assets/css/software_home.css">
+<link rel="stylesheet" href="/assets/css/software_home.css?v=2">
 
 <!--
 ##################################################
@@ -72,14 +72,14 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
 <div class="section-container">
 <div class="section-main">
     <h2 class="section-h2"><strong class="software-name">Exastro IT Automation</strong>とは？</h2>
-    <p class="section-p">IT Automationは、システム構築業務の自動化/効率化/省力化を実現するためのソフトウェアです。</p>
+    <p class="section-p">Exastro IT Automation は、自動化/効率化/省力化を目的としたシステムの構成管理のためのフレームワークです。</p>
     <h3 class="section-h3">システム構築/運用は情報の一元管理が要！</h3>
-    <p class="section-p">システムの構成情報であるパラメータや手順(IaC)が一元的に管理されていないと、情報連携のミスやコミュニケーションコストが発生してしまいます。Exastro IT Automation は、CMDB 上にシステムの過去・現在・未来のパラメータ情報を格納でき、作業手順書である IaC にパラメータを連携することで IaC の再利用性を高めることができます。</p>
+    <p class="section-p">Exastro IT Automation は、情報連携のミスやチーム間の情報伝達のコストを抑えるために、システムの構成情報であるパラメータや手順(IaC)を一元的に管理する仕組みを提供します。また、CMDB 上にシステムの過去・現在・未来のパラメータ情報を格納でき、作業手順書である IaC にパラメータを連携することで IaC の再利用性を高めることができます。</p>
     <h2 class="section-h2">Ver. 2 で何が変わったのか？</h2>
     <h3 class="section-h3">マルチテナンシー対応</h3>
     <p class="section-p">複数の組織やプロジェクトを1つの Exastro IT Automation 上にテナントとして管理できるため、コンピュータリソースを効率的に利用できます。また、データ領域はテナント毎に隔離されているため情報の機密性が保たれています。</p>
     <h3 class="section-h3">ワークスペース機能</h3>
-    <p class="section-p">ワークスペース機能により、管理対象のシステム毎に個別に CMDB を利用することが可能になりました。</p>
+    <p class="section-p">システムを構成・管理・維持するために必要な情報を一元管理するための作業領域としてワークスペース機能を提供しています。このワークスペース機能を利用することで異なるシステムを同時に複数管理することが可能です。</p>
     <h3 class="section-h3">Restful API</h3>
     <p class="section-p">Restful API によりサードパーティ制のアプリケーションとスムーズにの連携が可能です。</p>
 </div>
@@ -101,21 +101,21 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
         <dl class="problem-list">
             <dt class="problem-title"><i class="fa-solid fa-xmark"></i>データ多重管理による<br class="problem-br">設計ミス</dt>
             <dd class="problem-resolve"><i class="fas fa-check-circle"></i>データを一括で管理、二重管理による設計ミスを防ぎます。</dd>
-            <dd class="problem-image"><img src="https://exastro-suite.github.io/it-automation-docs/asset/img/home_image01.jpg" alt=""></dd>
+            <!-- <dd class="problem-image"><img src="https://exastro-suite.github.io/it-automation-docs/asset/img/home_image01.jpg" alt=""></dd> -->
         </dl>
     </li>
     <li class="resolve-problem-item">
         <dl class="problem-list">
             <dt class="problem-title"><i class="fa-solid fa-xmark"></i>複雑な人手作業による<br class="problem-br">オペレーションミス</dt>
             <dd class="problem-resolve"><i class="fas fa-check-circle"></i>構築作業は自動実行、実行状況をわかりやすく表示します。</dd>
-            <dd class="problem-image"><img src="https://exastro-suite.github.io/it-automation-docs/asset/img/home_image02.jpg" alt=""></dd>
+            <!-- <dd class="problem-image"><img src="https://exastro-suite.github.io/it-automation-docs/asset/img/home_image02.jpg" alt=""></dd> -->
         </dl>
     </li>
     <li class="resolve-problem-item">
         <dl class="problem-list">
             <dt class="problem-title"><i class="fa-solid fa-xmark"></i>作業記録不足による<br class="problem-br">障害対応遅延</dt>
             <dd class="problem-resolve"><i class="fas fa-check-circle"></i>作業記録をしっかりと管理、作業の成否をレポートします。</dd>
-            <dd class="problem-image"><img src="https://exastro-suite.github.io/it-automation-docs/asset/img/home_image03.jpg" alt=""></dd>
+            <!-- <dd class="problem-image"><img src="https://exastro-suite.github.io/it-automation-docs/asset/img/home_image03.jpg" alt=""></dd> -->
         </dl>
     </li>
 </ul>
