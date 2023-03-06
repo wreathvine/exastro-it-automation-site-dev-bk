@@ -70,13 +70,19 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
 <section id="overview" class="section">
 
 <div class="section-container">
-
 <div class="section-main">
     <h2 class="section-h2"><strong class="software-name">Exastro IT Automation</strong>とは？</h2>
     <p class="section-p">IT Automationは、システム構築業務の自動化/効率化/省力化を実現するためのソフトウェアです。</p>
     <h3 class="section-h3">システム構築は最初が肝心！</h3>
     <p class="section-p">環境設定がきちんと管理されていないと、皆様が使うアプリケーションは不安定な足元の上に建てられた建物のように大きくなるほどグラグラになってしまいます。増築しても揺らがないしっかりとした土台作りにIT Automationが活躍します。</p>
     <p class="section-p">SEのために設計された、統一されたインタフェースにパラメータをセットしていくだけのカンタン構築！システムごとの複雑な入力画面を勉強する手間を大幅削減。</p>
+    <h2 class="section-h2">Ver. 2 で何が変わったのか？</h2>
+    <h3 class="section-h3">マルチテナンシー対応</h3>
+    <p class="section-p">複数の組織やプロジェクトを1つの Exastro IT Automation 上にテナントとして管理できるため、コンピュータリソースを効率的に利用できます。また、データ領域はテナント毎に隔離されているため情報の機密性が保たれています。</p>
+    <h3 class="section-h3">ワークスペース機能</h3>
+    <p class="section-p">管理対象のシステム毎に CMDB を提供するためのワークスペース機能を搭載しています。これにより、管理対象のシステム毎に個別に CMDB を利用することが可能になりました。</p>
+    <h3 class="section-h3">Restful API</h3>
+    <p class="section-p">Restful API によりサードパーティ制のアプリケーションとスムーズにの連携が可能です。</p>
 </div>
 
 <div class="section-image">
