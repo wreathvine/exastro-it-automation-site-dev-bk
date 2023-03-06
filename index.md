@@ -18,12 +18,12 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
 
 <div class="header-container">
     <div class="header-main">
-        <div class="header-main-specialized"><span>システム<strong>構築</strong>に特化</span></div>
+        <div class="header-main-specialized"><span>システムの<strong>構成管理</strong>に特化</span></div>
         <h1 class="header-main-title">
             <span class="header-main-exastro">Exastro</span>
             <span class="header-main-software">IT Automation <span style="font-size: 50%">Ver.</span>2</span>
         </h1>
-        <p class="header-main-description">Exastro IT Automationはシステム設定をデジタル化して一元管理するためのオープンソースのフレームワークです。</p>
+        <p class="header-main-description">Exastro IT Automation はシステム設定をデジタル化して一元管理するためのオープンソースのフレームワークです。</p>
     </div>
     <div class="header-menu">
         <ul class="header-menu-list">
@@ -73,14 +73,13 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
 <div class="section-main">
     <h2 class="section-h2"><strong class="software-name">Exastro IT Automation</strong>とは？</h2>
     <p class="section-p">IT Automationは、システム構築業務の自動化/効率化/省力化を実現するためのソフトウェアです。</p>
-    <h3 class="section-h3">システム構築は最初が肝心！</h3>
-    <p class="section-p">環境設定がきちんと管理されていないと、皆様が使うアプリケーションは不安定な足元の上に建てられた建物のように大きくなるほどグラグラになってしまいます。増築しても揺らがないしっかりとした土台作りにIT Automationが活躍します。</p>
-    <p class="section-p">SEのために設計された、統一されたインタフェースにパラメータをセットしていくだけのカンタン構築！システムごとの複雑な入力画面を勉強する手間を大幅削減。</p>
+    <h3 class="section-h3">システム構築/運用は情報の一元管理が要！</h3>
+    <p class="section-p">システムの構成情報であるパラメータや手順(IaC)が一元的に管理されていないと、情報連携のミスやコミュニケーションコストが発生してしまいます。Exastro IT Automation は、CMDB 上にシステムの過去・現在・未来のパラメータ情報を格納でき、作業手順書である IaC にパラメータを連携することで IaC の再利用性を高めることができます。</p>
     <h2 class="section-h2">Ver. 2 で何が変わったのか？</h2>
     <h3 class="section-h3">マルチテナンシー対応</h3>
     <p class="section-p">複数の組織やプロジェクトを1つの Exastro IT Automation 上にテナントとして管理できるため、コンピュータリソースを効率的に利用できます。また、データ領域はテナント毎に隔離されているため情報の機密性が保たれています。</p>
     <h3 class="section-h3">ワークスペース機能</h3>
-    <p class="section-p">管理対象のシステム毎に CMDB を提供するためのワークスペース機能を搭載しています。これにより、管理対象のシステム毎に個別に CMDB を利用することが可能になりました。</p>
+    <p class="section-p">ワークスペース機能により、管理対象のシステム毎に個別に CMDB を利用することが可能になりました。</p>
     <h3 class="section-h3">Restful API</h3>
     <p class="section-p">Restful API によりサードパーティ制のアプリケーションとスムーズにの連携が可能です。</p>
 </div>
