@@ -84,7 +84,7 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
     <h3 class="section-h3">ワークスペース機能</h3>
     <p class="section-p">システムのパラメータ、設定ファイル、自動化ソフトウェアの IaC といった、システムを構成・管理・維持するための作業領域としてワークスペース機能を提供しています。このワークスペース機能を利用することで複数のシステム、または環境を容易に管理できます。</p>
     <h3 class="section-h3">Restful API</h3>
-    <p class="section-p">Restful API によりサードパーティ製のアプリケーションとスムーズに連携が可能です。</p>
+    <p class="section-p">すべての操作を Restful API で操作可能で周辺システムとの連携が容易です。</p>
 </div>
 
 <div class="section-image">
