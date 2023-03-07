@@ -1,0 +1,13 @@
+@charset "utf-8";
+/* CSS Document */
+
+.menuBar-Logo {
+width: 216px;
+}
+.menuBar-MainMenu {
+left: 260px;
+}
+#header {
+background-color: #001E45;
+background-image: url(https://www.exastro.org/assets/img/home_banner_ita.jpg);
+}

@@ -1,0 +1,11 @@
+---
+layout: null
+permalink: robots.txt
+sitemap: false
+---
+User-agent: *
+{% if jekyll.environment == "development" %}
+  Disallow: /
+{% else %}
+    Disallow:
+{% endif %}
