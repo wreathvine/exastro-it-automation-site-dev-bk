@@ -236,7 +236,6 @@ $(function(){
 </script>
 
 
-
 <section id="applied" class="section">
 
 <div class="section-container">
