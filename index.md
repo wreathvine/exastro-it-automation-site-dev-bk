@@ -126,13 +126,13 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
 
 <script>
 $(function(){
-    $("img").click(function () {
+    $("document").on('click','img',function () {
         $("#grayBack").html($(this).prop("outerHTML"));
         $("#grayBack").fadeIn(200);
         return false;
     });
 
-    $("#grayBack").click(function () {
+    $("document").on('click','#grayBack',function () {
         $("#grayBack").fadeOut(200);
         return false;
     });  
