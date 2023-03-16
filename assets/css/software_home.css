@@ -164,6 +164,32 @@ font-weight: bold;
 }
 
 
+#grayBack {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+max-width: 100% !important;
+height: 100%;
+background: rgba(255, 255, 255, 0.8);
+z-index: 100;
+}
+  
+#grayBack img {
+position: absolute;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+margin: auto;
+width: 100% !important;
+max-width: 90%;
+max-height: 90%;
+height: 90%;
+object-fit: contain;
+padding-top: 80px;
+}
 
 @media screen and ( max-width: 1200px ){
 
