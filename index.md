@@ -8,7 +8,7 @@ page_name: index
 description: Exastro IT Automationはシステム設定をデジタル化して一元管理するためのオープンソースのフレームワークです。
 ---
 <link rel="stylesheet" href="assets/css/software_home.css?v=3">
-<script src="assets/js/ita-site.js?v=1"></script>
+<script src="assets/js/ita-site.js?v=2"></script>
 
 <!--
 ##################################################
