@@ -7,7 +7,8 @@ page_class: home
 page_name: index
 description: Exastro IT Automationはシステム設定をデジタル化して一元管理するためのオープンソースのフレームワークです。
 ---
-<link rel="stylesheet" href="/assets/css/software_home.css?v=2">
+<link rel="stylesheet" href="assets/css/software_home.css?v=3">
+<script src="assets/js/ita-site.js?v=1"></script>
 
 <!--
 ##################################################
@@ -88,7 +89,7 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
 </div>
 
 <div class="section-image">
-    <figure class="loupe touch"><img src="/assets/img/logo_image.png" alt="Exastro IT Automation"></figure>
+    <figure class="loupe touch"><img src="assets/img/logo_image.png" alt="Exastro IT Automation"></figure>
 </div>
 
 </div>
@@ -104,21 +105,21 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
         <dl class="problem-list">
             <dt class="problem-title"><i class="fa-solid fa-xmark"></i>データ多重管理による<br class="problem-br">設計ミス</dt>
             <dd class="problem-resolve"><i class="fas fa-check-circle"></i>データを一括で管理、二重管理による設計ミスを防ぎます。</dd>
-            <!-- <dd class="problem-image"><img src="https://exastro-suite.github.io/it-automation-docs/asset/img/home_image01.jpg" alt=""></dd> -->
+            <dd class="problem-image"><img src="asset/img/parameter_sheet_for_input_2.gif" alt=""></dd>
         </dl>
     </li>
     <li class="resolve-problem-item">
         <dl class="problem-list">
             <dt class="problem-title"><i class="fa-solid fa-xmark"></i>複雑な人手作業による<br class="problem-br">オペレーションミス</dt>
             <dd class="problem-resolve"><i class="fas fa-check-circle"></i>構築作業は自動実行、実行状況をわかりやすく表示します。</dd>
-            <!-- <dd class="problem-image"><img src="https://exastro-suite.github.io/it-automation-docs/asset/img/home_image02.jpg" alt=""></dd> -->
+            <dd class="problem-image"><img src="asset/img/excute_conductor.gif" alt=""></dd>
         </dl>
     </li>
     <li class="resolve-problem-item">
         <dl class="problem-list">
             <dt class="problem-title"><i class="fa-solid fa-xmark"></i>作業記録不足による<br class="problem-br">障害対応遅延</dt>
             <dd class="problem-resolve"><i class="fas fa-check-circle"></i>作業記録をしっかりと管理、作業の成否をレポートします。</dd>
-            <!-- <dd class="problem-image"><img src="https://exastro-suite.github.io/it-automation-docs/asset/img/home_image03.jpg" alt=""></dd> -->
+            <dd class="problem-image"><img src="asset/img/job_detail.gif" alt=""></dd>
         </dl>
     </li>
 </ul>
