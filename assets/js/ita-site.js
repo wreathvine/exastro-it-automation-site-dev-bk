@@ -1,4 +1,4 @@
-$("figure img").click(function () {
+$("img").click(function () {
     $("#grayBack").html($(this).prop("outerHTML"));
     $("#grayBack").fadeIn(200);
     return false;
