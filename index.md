@@ -105,21 +105,21 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
         <dl class="problem-list">
             <dt class="problem-title"><i class="fa-solid fa-xmark"></i>データ多重管理による<br class="problem-br">設計ミス</dt>
             <dd class="problem-resolve"><i class="fas fa-check-circle"></i>データを一括で管理、二重管理による設計ミスを防ぎます。</dd>
-            <dd class="problem-image"><img src="{{site.baseurl | prepend: site.url}}/asset/img/parameter_sheet_for_input_2.gif" alt=""></dd>
+            <dd class="problem-image"><img src="{{site.baseurl | prepend: site.url}}/assets/img/parameter_sheet_for_input_2.gif" alt=""></dd>
         </dl>
     </li>
     <li class="resolve-problem-item">
         <dl class="problem-list">
             <dt class="problem-title"><i class="fa-solid fa-xmark"></i>複雑な人手作業による<br class="problem-br">オペレーションミス</dt>
             <dd class="problem-resolve"><i class="fas fa-check-circle"></i>構築作業は自動実行、実行状況をわかりやすく表示します。</dd>
-            <dd class="problem-image"><img src="{{site.baseurl | prepend: site.url}}/asset/img/excute_conductor.gif" alt=""></dd>
+            <dd class="problem-image"><img src="{{site.baseurl | prepend: site.url}}/assets/img/excute_conductor.gif" alt=""></dd>
         </dl>
     </li>
     <li class="resolve-problem-item">
         <dl class="problem-list">
             <dt class="problem-title"><i class="fa-solid fa-xmark"></i>作業記録不足による<br class="problem-br">障害対応遅延</dt>
             <dd class="problem-resolve"><i class="fas fa-check-circle"></i>作業記録をしっかりと管理、作業の成否をレポートします。</dd>
-            <dd class="problem-image"><img src="{{site.baseurl | prepend: site.url}}/asset/img/job_detail.gif" alt=""></dd>
+            <dd class="problem-image"><img src="{{site.baseurl | prepend: site.url}}/assets/img/job_detail.gif" alt=""></dd>
         </dl>
     </li>
 </ul>
