@@ -103,21 +103,21 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
         <dl class="problem-list">
             <dt class="problem-title"><i class="fa-solid fa-xmark"></i>データ多重管理による<br class="problem-br">設計ミス</dt>
             <dd class="problem-resolve"><i class="fas fa-check-circle"></i>データを一括で管理、二重管理による設計ミスを防ぎます。</dd>
-            <dd class="problem-image"><img src="assets/img/parameter_sheet_for_input_2.gif" alt=""></dd>
+            <dd class="problem-image"><figure class="loupe touch"><img src="assets/img/parameter_sheet_for_input_2.gif" alt=""></figure></dd>
         </dl>
     </li>
     <li class="resolve-problem-item">
         <dl class="problem-list">
             <dt class="problem-title"><i class="fa-solid fa-xmark"></i>複雑な人手作業による<br class="problem-br">オペレーションミス</dt>
             <dd class="problem-resolve"><i class="fas fa-check-circle"></i>構築作業は自動実行、実行状況をわかりやすく表示します。</dd>
-            <dd class="problem-image"><img src="assets/img/excute_conductor.gif" alt=""></dd>
+            <dd class="problem-image"><figure class="loupe touch"><img src="assets/img/excute_conductor.gif" alt=""></figure></dd>
         </dl>
     </li>
     <li class="resolve-problem-item">
         <dl class="problem-list">
             <dt class="problem-title"><i class="fa-solid fa-xmark"></i>作業記録不足による<br class="problem-br">障害対応遅延</dt>
             <dd class="problem-resolve"><i class="fas fa-check-circle"></i>作業記録をしっかりと管理、作業の成否をレポートします。</dd>
-            <dd class="problem-image"><img src="assets/img/job_detail.gif" alt=""></dd>
+            <dd class="problem-image"><figure class="loupe touch"><img src="assets/img/job_detail.gif" alt=""></figure></dd>
         </dl>
     </li>
 </ul>
@@ -125,6 +125,7 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
 </div>
 
 <script>
+/*
 $("document").on('click','img',function () {
     $("#grayBack").html($(this).prop("outerHTML"));
     $("#grayBack").fadeIn(200);
@@ -134,7 +135,8 @@ $("document").on('click','img',function () {
 $("document").on('click','#grayBack',function () {
     $("#grayBack").fadeOut(200);
     return false;
-});  
+});
+*/
 </script>
 </section>
 
