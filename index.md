@@ -288,6 +288,7 @@ $(function(){
 
 </div>
 </section>-->
-
+<div id="overlay"></div>
+<div id="grayBack"></div>
 </article>
 </main>
