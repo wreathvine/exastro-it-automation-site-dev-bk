@@ -36,12 +36,15 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
                 <span class="header-link-sub">Documents</span>
                 <span class="header-link-main">Manual</span>
             </a></li>
-            <!-- <li class="header-menu-item"><a href="https://ita-docs.exastro.org/2.0/ja/learn/" class="header-link touch"> -->
-            <li class="header-menu-item"><span class="header-nolink">
+            <li class="header-menu-item"><a href="https://ita-docs.exastro.org/2.0/ja/learn/quickstart/index.html" class="header-link touch">
+                <i class="fa-solid fa-jet-fighter"></i>
+                <span class="header-link-sub">Documents</span>
+                <span class="header-link-main">Quickstart</span>
+            </span></li>
+            <li class="header-menu-item"><a href="https://ita-docs.exastro.org/2.0/ja/learn/" class="header-link touch">
                 <i class="fas fa-school"></i>
-                <!-- <span class="header-link-sub">Documents</span> -->
+                <span class="header-link-sub">Documents</span>
                 <span class="header-link-main">Learn</span>
-                <span class="header-link-coming-soon">Coming Soon...</span>
             </span></li>
             <!-- </a></li> -->
             <li class="header-menu-item"><span class="header-nolink">
