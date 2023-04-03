@@ -239,10 +239,6 @@ gap: 64px;
 max-width: 1600px;
 margin: 0 auto;
 }
-#overview .section-container,
-#cloudnative .section-container {
-flex-direction: row-reverse;
-}
 .section-image,
 .section-main {
 flex: 1 1 50%;

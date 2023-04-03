@@ -11,3 +11,8 @@ left: 260px;
 background-color: #001E45;
 background-image: url(https://www.exastro.org/assets/img/home_banner_ita.jpg);
 }
+
+#version-update .section-container,
+#cloudnative .section-container {
+flex-direction: row-reverse;
+}
