@@ -105,7 +105,7 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
 </div>
 
 <div class="section-image">
-    <figure class="loupe touch"><img src="assets/img/logo_image.png" alt="Exastro IT Automation"></figure>
+    <figure class="loupe touch"><img src="assets/img/exastro-it-automation.gif" alt="Exastro IT Automation"></figure>
 </div>
 
 </div>
