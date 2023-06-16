@@ -26,22 +26,22 @@ description: Exastro IT Automationはシステム設定をデジタル化して�
     </div>
     <div class="header-menu">
         <ul class="header-menu-list">
-            <li class="header-menu-item"><a href="https://ita-docs.exastro.org/2.0/ja/installation/" class="header-link touch">
+            <li class="header-menu-item"><a href="https://ita-docs.exastro.org/2.1/ja/installation/" class="header-link touch">
                 <i class="fas fa-download"></i>
                 <span class="header-link-sub">Documents</span>
                 <span class="header-link-main">Install</span>
             </a></li>
-            <li class="header-menu-item"><a href="https://ita-docs.exastro.org/2.0/ja/manuals/" class="header-link touch">
+            <li class="header-menu-item"><a href="https://ita-docs.exastro.org/2.1/ja/manuals/" class="header-link touch">
                 <i class="fas fa-file-alt"></i>
                 <span class="header-link-sub">Documents</span>
                 <span class="header-link-main">Manual</span>
             </a></li>
-            <li class="header-menu-item"><a href="https://ita-docs.exastro.org/2.0/ja/learn/quickstart/index.html" class="header-link touch">
+            <li class="header-menu-item"><a href="https://ita-docs.exastro.org/2.1/ja/learn/quickstart/index.html" class="header-link touch">
                 <i class="fa-solid fa-jet-fighter"></i>
                 <span class="header-link-sub">Learn</span>
                 <span class="header-link-main">Quickstart</span>
             </a></li>
-            <li class="header-menu-item"><a href="https://ita-docs.exastro.org/2.0/ja/learn/" class="header-link touch">
+            <li class="header-menu-item"><a href="https://ita-docs.exastro.org/2.1/ja/learn/" class="header-link touch">
                 <i class="fas fa-school"></i>
                 <span class="header-link-sub">Documents</span>
                 <span class="header-link-main">Learn</span>
