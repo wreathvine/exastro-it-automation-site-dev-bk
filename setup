@@ -9,7 +9,7 @@ REQUIRED_DOT_FREE=1024
 DOCKER_COMPOSE_VER="v2.20.3"
 PROJECT_DIR="${HOME}/exastro-docker-compose"
 COMPOSE_FILE="${PROJECT_DIR}/docker-compose.yml"
-LOG_FILE="${PROJECT_DIR}/installation.log"
+LOG_FILE="${HOME}/exastro-installation.log"
 ENV_FILE="${PROJECT_DIR}/.env"
 if [ -f ${ENV_FILE} ]; then
     source ${ENV_FILE}
@@ -275,7 +275,6 @@ get_system_info() {
         error "Not supported OS."
     fi
 
-    source /etc/os-release
     ARCH=$(uname -p)
     OS_TYPE=$(uname)
     OS_NAME=$(awk -F= '$1=="NAME" { print $2; }' /etc/os-release | tr -d '"')
@@ -316,7 +315,6 @@ check_system() {
         error "Not supported OS."
     fi
     OS_TYPE=$(uname)
-    source /etc/os-release
 
     # Check OS
     info "NAME:         ${OS_NAME}"
