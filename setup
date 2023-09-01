@@ -12,7 +12,7 @@ COMPOSE_FILE="${PROJECT_DIR}/docker-compose.yml"
 LOG_FILE="${HOME}/exastro-installation.log"
 ENV_FILE="${PROJECT_DIR}/.env"
 if [ -f ${ENV_FILE} ]; then
-    source ${ENV_FILE}
+    . ${ENV_FILE}
 fi
 
 ### Logger functions
@@ -32,7 +32,7 @@ banner(){
     # Get window width
     WIN_WIDTH=$(tput cols 2>/dev/null)
 
-    if [ "${WIN_WIDTH}" == "" ] || [ "${WIN_WIDTH}" -lt 80 ]; then
+    if [ "${WIN_WIDTH}" = "" ] || [ "${WIN_WIDTH}" -lt 80 ]; then
         # Small banner
         cat <<'_EOF_'
 ################################################
@@ -280,16 +280,16 @@ get_system_info() {
     OS_NAME=$(awk -F= '$1=="NAME" { print $2; }' /etc/os-release | tr -d '"')
     VERSION_ID=$(awk -F= '$1=="VERSION_ID" { print $2; }' /etc/os-release | tr -d '"')
     DOCKER_COMPOSE="docker compose"
-    if [ "${OS_NAME}" == "Red Hat Enterprise Linux" ]; then
+    if [ "${OS_NAME}" = "Red Hat Enterprise Linux" ]; then
         if [ $(expr "${VERSION_ID}" : "^8\..*") != 0 ]; then
             DEP_PATTERN="RHEL8"
             DOCKER_COMPOSE="docker-compose"
         fi
-    elif [ "${OS_NAME}" == "AlmaLinux" ]; then
+    elif [ "${OS_NAME}" = "AlmaLinux" ]; then
         if [ $(expr "${VERSION_ID}" : "^8\..*") != 0 ]; then
             DEP_PATTERN="AlmaLinux8"
         fi
-    elif [ "${OS_NAME}" == "Ubuntu" ]; then
+    elif [ "${OS_NAME}" = "Ubuntu" ]; then
         if [ $(expr "${VERSION_ID}" : "^20\..*") != 0 ]; then
             DEP_PATTERN="Ubuntu20"
         elif [ $(expr "${VERSION_ID}" : "^22\..*") != 0 ]; then
@@ -416,7 +416,7 @@ installation_podman_on_rhel8() {
     sudo dnf install -y podman podman-docker
 
     info "Check if Podman is installed"
-    if ! command -v podman &>/dev/null; then
+    if ! command -v podman >/dev/null 2>&1; then
         error "Podman installation failed!"
     fi
 
@@ -437,10 +437,10 @@ installation_podman_on_rhel8() {
     systemctl --user status podman.socket
     podman unshare chown $(id -u):$(id -g) /run/user/$(id -u)/podman/podman.sock
 
-    if ! grep "^export DOCKER_HOST" ${HOME}/.bashrc > /dev/null; then
-        sed -i -e "s|^export DOCKER_HOST.*|export DOCKER_HOST=unix:///run/user/${UID}/podman/podman.sock|" ${HOME}/.bashrc
+    if ! (grep -q "^export DOCKER_HOST" ${HOME}/.bashrc); then
+        sed -i -e "s|^export DOCKER_HOST.*|export DOCKER_HOST=unix:///run/user/$(id -ru)/podman/podman.sock|" ${HOME}/.bashrc
     else
-        echo "export DOCKER_HOST=unix:///run/user/${UID}/podman/podman.sock" >> ${HOME}/.bashrc
+        echo "export DOCKER_HOST=unix:///run/user/$(id -ru)/podman/podman.sock" >> ${HOME}/.bashrc
     fi
 }
 
@@ -499,13 +499,13 @@ installation_docker_on_ubuntu() {
 ### Installation container engine
 installation_container_engine() {
     info "Installing container engine..."
-    if [ "${DEP_PATTERN}" == "RHEL8" ]; then
+    if [ "${DEP_PATTERN}" = "RHEL8" ]; then
         installation_podman_on_rhel8
-    elif [ "${DEP_PATTERN}" == "AlmaLinux8" ]; then
+    elif [ "${DEP_PATTERN}" = "AlmaLinux8" ]; then
         installation_docker_on_alamalinux8
-    elif [ "${DEP_PATTERN}" == "Ubuntu20" ]; then
+    elif [ "${DEP_PATTERN}" = "Ubuntu20" ]; then
         installation_docker_on_ubuntu
-    elif [ "${DEP_PATTERN}" == "Ubuntu22" ]; then
+    elif [ "${DEP_PATTERN}" = "Ubuntu22" ]; then
         installation_docker_on_ubuntu
     fi
 }
@@ -546,7 +546,7 @@ installation_cronjob() {
     # Backup current crontab
     crontab -l > $backup_file
 
-    if [ $(grep -c "Exastro auto generate" $backup_file) == 0 ]; then
+    if grep -q "Exastro auto generate" $backup_file; then
         crontab -l 2>/dev/null > $output_file
         cat << _EOF_ >> $output_file
 ######## START Exastro auto generate (DO NOT REMOVE bellow lines.) ########
@@ -571,7 +571,7 @@ installation_exastro() {
         git clone https://github.com/exastro-suite/exastro-docker-compose.git
     fi
 
-    if [ "${DEP_PATTERN}" == "RHEL8" ]; then
+    if [ "${DEP_PATTERN}" = "RHEL8" ]; then
         installation_exastro_on_rhel8
     fi
 
@@ -614,29 +614,28 @@ setup() {
     if [ -f ${ENV_FILE} ]; then
         info "'.env' file is already exist. [${ENV_FILE}]"
         echo ""
-        read -p "Regenerate .env file? (y/n) [default: n]: " confirm
-        if ! [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]; then
+        read -r -p "Regenerate .env file? (y/n) [default: n]: " confirm
+        echo ""
+        if ! (echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"); then
             info "Cancelled."
             exit 0
         fi
     fi
     while true; do
 
-        read -p "Generate all password and token automatically.? (y/n) [default: y]: " confirm
-        if [[ $confirm == [nN] || $confirm == [nN][oO] ]]; then
+        read -r -p "Generate all password and token automatically.? (y/n) [default: y]: " confirm
+        echo ""
+        if echo $confirm | grep -q -e "[nN]" -e "[nN][oO]"; then
             PWD_METHOD="manually"
         else
             PWD_METHOD="auto"
         fi
 
-        if [ ${PWD_METHOD} == "manually" ]; then
+        if [ "${PWD_METHOD}" = "manually" ]; then
             while true; do
+                read -r -p "Exastro system admin password: " password1
                 echo ""
-                read -sp "Exastro system admin password: " password1
-                echo ""
-                read -sp "Exastro system admin password (confirm): " password2
-                echo ""
-                if [ "$password1" == "" ] || [ "$password1" != "$password2" ]; then
+                if [ "$password1" = "" ]; then
                     echo "Invalid password!!"
                 else
                     SYSTEM_ADMIN_PASSWORD=$password1
@@ -644,11 +643,9 @@ setup() {
                 fi
             done
             while true; do
-                read -sp "Database password: " password1
+                read -r -p "Database password: " password1
                 echo ""
-                read -sp "Database password (confirm): " password2
-                echo ""
-                if [ "$password1" == "" ] || [ "$password1" != "$password2" ]; then
+                if [ "$password1" = "" ]; then
                     echo "Invalid password!!"
                 else
                     DB_ADMIN_PASSWORD=$password1
@@ -673,12 +670,13 @@ setup() {
         ENCRYPT_KEY=$(head -c 32 /dev/urandom | base64)
 
         while true; do
-            read -p "Service URL? [default: http://127.0.0.1:30080]: " url
-            if [ $(expr "${url}" : "http://.*") == 0 ] && [ $(expr "${url}" : "https://.*") == 0 ] && [ "${url}" != "" ]  ; then
+            read -r -p "Service URL? [default: http://127.0.0.1:30080]: " url
+            echo ""
+            if $(echo "${url}" | grep -q "http://.*") && $(echo "${url}" | grep -q "https://.*") && [ "${url}" != "" ]  ; then
                 echo "Invalid URL format"
                 continue
             fi
-            if [ "$url" == "" ]; then
+            if [ "$url" = "" ]; then
                 EXTERNAL_URL_PROTOCOL=http
                 EXTERNAL_URL_HOST=127.0.0.1
                 EXTERNAL_URL_PORT=30080
@@ -687,8 +685,8 @@ setup() {
                 EXTERNAL_URL_HOST=$(echo $url | awk -F[:/] '{print $4}')
                 EXTERNAL_URL_PORT=$(echo $url | awk -F[:/] '{print $5}')
             fi
-            if [ "${EXTERNAL_URL_PORT}" == "" ]; then
-                if [ "${EXTERNAL_URL_PROTOCOL}" == "http" ]; then
+            if [ "${EXTERNAL_URL_PORT}" = "" ]; then
+                if [ "${EXTERNAL_URL_PROTOCOL}" = "http" ]; then
                     EXTERNAL_URL_PORT="80"
                 else
                     EXTERNAL_URL_PORT="443"
@@ -698,12 +696,13 @@ setup() {
         done
 
         while true; do
-            read -p "Management URL? [default: http://127.0.0.1:30081]: " url
-            if [ $(expr "${url}" : "http://.*") == 0 ] && [ $(expr "${url}" : "https://.*") == 0 ] && [ "${url}" != "" ]; then
+            read -r -p "Management URL? [default: http://127.0.0.1:30081]: " url
+            echo ""
+            if $(echo "${url}" | grep -q "http://.*") && $(echo "${url}" | grep -q "https://.*") && [ "${url}" != "" ]  ; then
                 echo "Invalid URL format"
                 continue
             fi
-            if [ "$url" == "" ]; then
+            if [ "$url" = "" ]; then
                 EXTERNAL_URL_MNG_PROTOCOL=http
                 EXTERNAL_URL_MNG_HOST=127.0.0.1
                 EXTERNAL_URL_MNG_PORT=30081
@@ -712,8 +711,8 @@ setup() {
                 EXTERNAL_URL_MNG_HOST=$(echo $url | awk -F[:/] '{print $4}')
                 EXTERNAL_URL_MNG_PORT=$(echo $url | awk -F[:/] '{print $5}')
             fi
-            if [ "${EXTERNAL_URL_MNG_PORT}" == "" ]; then
-                if [ "${EXTERNAL_URL_MNG_PROTOCOL}" == "http" ]; then
+            if [ "${EXTERNAL_URL_MNG_PORT}" = "" ]; then
+                if [ "${EXTERNAL_URL_MNG_PROTOCOL}" = "http" ]; then
                     EXTERNAL_URL_MNG_PORT="80"
                 else
                     EXTERNAL_URL_MNG_PORT="443"
@@ -722,24 +721,23 @@ setup() {
             break
         done
 
-        if [ "${DEP_PATTERN}" == "RHEL8" ]; then
+        if [ "${DEP_PATTERN}" = "RHEL8" ]; then
             HOST_DOCKER_GID=1000
-            HOST_DOCKER_SOCKET_PATH="/run/user/${UID}/podman/podman.sock"
+            HOST_DOCKER_SOCKET_PATH="/run/user/$(id -ru)/podman/podman.sock"
         else
             HOST_DOCKER_GID=$(grep docker /etc/group|awk -F':' '{print $3}')
             HOST_DOCKER_SOCKET_PATH="/var/run/docker.sock"
         fi
 
-        read -p "Deploy GitLab container? (y/n) [default: n]: " confirm
-        if [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]; then
+        read -r -p "Deploy GitLab container? (y/n) [default: n]: " confirm
+        echo ""
+        if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
             COMPOSE_PROFILES=all
-            if [ ${PWD_METHOD} == "manually" ]; then
+            if [ ${PWD_METHOD} = "manually" ]; then
                 while true; do
-                    read -sp "GitLab root password: " password1
+                    read -r -p "GitLab root password: " password1
                     echo ""
-                    read -sp "GitLab root password (confirm): " password2
-                    echo ""
-                    if [ "$password1" == "" ] || [ "$password1" != "$password2" ]; then
+                    if [ "$password1" = "" ]; then
                         echo "Invalid password!!"
                         continue
                     else
@@ -749,11 +747,9 @@ setup() {
                 done
 
                 while true; do
-                    read -sp "GitLab root token (e.g. root-access-token): " password1
+                    read -r -p "GitLab root token (e.g. root-access-token): " password1
                     echo ""
-                    read -sp "GitLab root token (confirm): " password2
-                    echo ""
-                    if [ "$password1" == "" ] || [ "$password1" != "$password2" ]; then
+                    if [ "$password1" = "" ]; then
                         echo "Invalid password!!"
                         continue
                     else
@@ -782,14 +778,15 @@ Service URL:                      ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST
 Manegement URL:                   ${EXTERNAL_URL_MNG_PROTOCOL}://${EXTERNAL_URL_MNG_HOST}:${EXTERNAL_URL_MNG_PORT}
 Docker GID:                       ${HOST_DOCKER_GID}
 Docker Socket path:               ${HOST_DOCKER_SOCKET_PATH}
-GitLab deployment:                $(if [ ${COMPOSE_PROFILES} == "all" ]; then echo "true"; else echo "false"; fi)
+GitLab deployment:                $(if [ ${COMPOSE_PROFILES} = "all" ]; then echo "true"; else echo "false"; fi)
 GitLab root password:             ********
 GitLab root token:                ********
 
 _EOF_
 
-        read -p "Deploy under this setting? (y/n) [default: n]: " confirm
-        if [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]; then
+        read -r -p "Deploy this setting? (y/n) [default: n]: " confirm
+        echo ""
+        if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
             info "Generate settig file [${PWD}/.env]."
             info "System administrator password:    ********"
             info "Database password:                ********"
@@ -797,7 +794,7 @@ _EOF_
             info "Manegement URL:                   ${EXTERNAL_URL_MNG_PROTOCOL}://${EXTERNAL_URL_MNG_HOST}:${EXTERNAL_URL_MNG_PORT}"
             info "Docker GID:                       ${HOST_DOCKER_GID}"
             info "Docker Socket path:               ${HOST_DOCKER_SOCKET_PATH}"
-            info "GitLab deployment:                $(if [ ${COMPOSE_PROFILES} == "all" ]; then echo "true"; else echo "false"; fi)"
+            info "GitLab deployment:                $(if [ ${COMPOSE_PROFILES} = "all" ]; then echo "true"; else echo "false"; fi)"
             info "GitLab root password:             ********"
             info "GitLab root token:                ********"
             
@@ -958,14 +955,14 @@ remove_cronjob() {
     # Read input file line by line and write to output file, while excluding the specified lines
     delete_lines=false
     while read -r line; do
-        if [[ $line == *"$start_string"* ]]; then
-            delete_lines=true
+        if echo $line | grep -q "$start_string"; then
+            delete_lines="true"
         fi
-        if [[ $delete_lines == false ]]; then
+        if [ "$delete_lines" = "false" ]; then
             echo "$line" >> $output_file
         fi
-        if [[ $line == *"$end_string"* ]]; then
-            delete_lines=false
+        if echo $line | grep -q "$end_string"; then
+            delete_lines="false"
         fi
     done < $input_file
 
@@ -980,7 +977,7 @@ remove_service() {
     info "Stopping and removing Exastro service..."
     cd ${PROJECT_DIR}
     ${DOCKER_COMPOSE} --profile all down
-    if [ "${DEP_PATTERN}" == "RHEL8" ]; then
+    if [ "${DEP_PATTERN}" = "RHEL8" ]; then
         systemctl --user disable --now exastro
         systemctl --user daemon-reload
         rm -f ${HOME}/.config/systemd/user/exastro.service
@@ -1032,25 +1029,25 @@ _EOF_
 
     info "Remove Exastro system."
     get_system_info
-    if [ "$REMOVE_FLG" == "" ]; then
+    if [ "$REMOVE_FLG" = "" ]; then
         echo ""
-        read -p "Really remove all containers? But, not remove presistent data. (y/n) [default: n]: " confirm
-        if [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]; then
+        read -r -p "Really remove all containers? But, not remove presistent data. (y/n) [default: n]: " confirm
+        if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
             remove_cronjob
             remove_service
         else
             info "Cancelled."
             exit 0
         fi
-    elif [ "$REMOVE_FLG" == "c" ]; then
+    elif [ "$REMOVE_FLG" = "c" ]; then
         echo ""
         echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
         echo "!!              ! ! !  C A U T I O N  ! ! !                     !!!"
         echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
         echo ""
         echo "You will NEVER be able to recovery your data again."
-        read -p "Really remove all containers and persistent data? (y/n) [default: n]: " confirm
-        if [[ $confirm == [yY] || $confirm == [yY][eE][sS] ]]; then
+        read -r -p "Really remove all containers and persistent data? (y/n) [default: n]: " confirm
+        if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
             remove_cronjob
             remove_service
             remove_exastro_data
