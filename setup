@@ -84,6 +84,22 @@ get_system_info() {
 # Main functions
 #########################################
 main() {
+    if [ "$#" = 0 ]; then
+        cat <<'_EOF_'
+
+Usage:
+  sh <(curl -Ssf https://ita.exastro.org/setup) COMMAND [options]
+     or
+  setup.sh COMMAND [options]
+
+Commands:
+  install     Installation Exastro system
+  remove      Remove Exastro system
+
+_EOF_
+        exit 2
+    fi
+
     SUB_COMMAND="$1"
 
     case "$SUB_COMMAND" in
@@ -1106,4 +1122,4 @@ remove_exastro_data() {
         yes | docker system prune
 }
 
-main "$1"
+main "$@"
