@@ -547,8 +547,8 @@ check_resource() {
             error "Lack of free space! Required at least ${REQUIRED_FREE_FOR_EXASTRO_DATA} MBytes free space on current directory."
         fi
         sleep 1
-        printf "\r\033[3F\033[K$(date) [INFO]: Checking required resource.....................ok\n" | tee -a "${LOG_FILE}"
-        printf "\r\033[3E\033[K" | tee -a "${LOG_FILE}"
+        printf "\r\033[4F\033[K$(date) [INFO]: Checking required resource.....................ok\n" | tee -a "${LOG_FILE}"
+        printf "\r\033[4E\033[K" | tee -a "${LOG_FILE}"
         echo ""
     else
         # Check free space of /var
@@ -559,8 +559,8 @@ check_resource() {
             error "Lack of free space! Required at least ${REQUIRED_FREE_FOR_CONTAINER_IMAGE} MBytes free space on ${HOME} directory."
         else
             sleep 1
-            printf "\r\033[2F\033[K$(date) [INFO]: Checking required resource.....................ok\n" | tee -a "${LOG_FILE}"
-            printf "\r\033[2E\033[K" | tee -a "${LOG_FILE}"
+            printf "\r\033[3F\033[K$(date) [INFO]: Checking required resource.....................ok\n" | tee -a "${LOG_FILE}"
+            printf "\r\033[3E\033[K" | tee -a "${LOG_FILE}"
             echo ""
         fi
     fi
