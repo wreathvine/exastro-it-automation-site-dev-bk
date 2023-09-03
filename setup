@@ -133,7 +133,7 @@ _EOF_
 
 ### Get options when install
 install() {
-    args=$(getopt -o "cireph" --long "check,install-packages,regist-service,setup-env,print,help" -- "$@") || exit 1
+    args=$(getopt -o "ciferph" --long "check,install-packages,fetch,setup-env,regist-service,print,help" -- "$@") || exit 1
 
     eval set -- "$args"
 
@@ -147,13 +147,17 @@ install() {
                 shift
                 DEPLOY_FLG="i"
                 ;;
-            -r | --regist-service )
+            -f | --fetch )
                 shift
-                DEPLOY_FLG="r"
+                DEPLOY_FLG="f"
                 ;;
             -e | --setup-env )
                 shift
                 DEPLOY_FLG="e"
+                ;;
+            -r | --regist-service )
+                shift
+                DEPLOY_FLG="r"
                 ;;
             -p | --print )
                 shift
@@ -173,8 +177,9 @@ Usage:
 Options:
   -c, --check                       Check if your system meets the requirements
   -i, --install-packages            Only install required packages and fetch exastro source files
-  -r, --regist-service              Only install exastro service
+  -f, --fetch                       Only fetch Exastro resources.
   -e, --setup                       Only generate environment file (.env)
+  -r, --regist-service              Only install exastro service
   -p, --print                       Print Exastro system information.
 
 _EOF_
@@ -208,16 +213,34 @@ _EOF_
             check_requirement
             installation_container_engine
             ;;
-        r )
-            banner
-            installation_exastro
+        f )
+            if [ ! -f ${ENV_FILE} ]; then
+                banner
+                fetch_exastro
+            fi
             ;;
         e )
-            banner
-            setup
+            if [ -f ${ENV_FILE} ]; then
+                banner
+                setup
+            else
+                error "Exasto system in NOT installed."
+            fi
+            ;;
+        r )
+            if [ -f ${ENV_FILE} ]; then
+                banner
+                installation_exastro
+            else
+                error "Exasto system in NOT installed."
+            fi
             ;;
         p )
-            prompt
+            if [ -f ${ENV_FILE} ]; then
+                prompt
+            else
+                error "Exasto system in NOT installed."
+            fi
             ;;
         * )
             ;;
