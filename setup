@@ -133,7 +133,6 @@ _EOF_
 
 ### Get options when install
 install() {
-    info "======================================================"
     args=$(getopt -o "cireph" --long "check,install-packages,regist-service,setup-env,print,help" -- "$@") || exit 1
 
     eval set -- "$args"
@@ -184,6 +183,7 @@ _EOF_
         esac
     done
 
+    info "======================================================"
     info "Start to setup Exastro system."
     get_system_info
     case "$DEPLOY_FLG" in
@@ -1006,7 +1006,6 @@ _EOF_
 
 ### Get options when remove
 remove() {
-    info "======================================================"
     args=$(getopt -o "ch" --long "completely-clean-up,help" -- "$@") || exit 1
 
     eval set -- "$args"
@@ -1037,6 +1036,7 @@ _EOF_
         esac
     done
 
+    info "======================================================"
     info "Remove Exastro system."
     get_system_info
     if [ "$REMOVE_FLG" = "" ]; then
