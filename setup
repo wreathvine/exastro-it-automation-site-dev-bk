@@ -702,6 +702,9 @@ fetch_exastro() {
     cd ${HOME}
     if [ ! -d ${PROJECT_DIR} ]; then
         git clone https://github.com/exastro-suite/exastro-docker-compose.git
+        if [ "${DEP_PATTERN}" = "RHEL8" ]; then
+            podman unshare chown $(id -u):$(id -g) "${PROJECT_DIR}/.volumes/storage/"
+        fi
     fi
 }
 
@@ -882,12 +885,13 @@ Manegement URL:                   ${EXTERNAL_URL_MNG_PROTOCOL}://${EXTERNAL_URL_
 Docker GID:                       ${HOST_DOCKER_GID}
 Docker Socket path:               ${HOST_DOCKER_SOCKET_PATH}
 GitLab deployment:                $(if [ ${COMPOSE_PROFILES} = "all" ]; then echo "true"; else echo "false"; fi)
+GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${EXTERNAL_URL_PORT}
 GitLab root password:             ********
 GitLab root token:                ********
 
 _EOF_
 
-        read -r -p "Deploy this setting? (y/n) [default: n]: " confirm
+        read -r -p "Generate .env file by bellow setting? (y/n) [default: n]: " confirm
         echo ""
         if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
             info "Generate settig file [${PWD}/.env]."
@@ -931,6 +935,7 @@ generate_env() {
     sed -i -e "s/^COMPOSE_PROFILES=.*/COMPOSE_PROFILES=${COMPOSE_PROFILES}/" ${ENV_FILE}
     sed -i -e "s/^GITLAB_ROOT_PASSWORD=.*/GITLAB_ROOT_PASSWORD=${GITLAB_ROOT_PASSWORD}/" ${ENV_FILE}
     sed -i -e "s/^GITLAB_ROOT_TOKEN=.*/GITLAB_ROOT_TOKEN=${GITLAB_ROOT_TOKEN}/" ${ENV_FILE}
+    sed -i -e "s/^GITLAB_HOST=.*/GITLAB_HOST=${EXTERNAL_URL_HOST}/" ${ENV_FILE}
 }
 
 ### Installation Exastro
@@ -999,11 +1004,18 @@ _EOF_
 ### Start Exastro system
 start_exastro() {
     info "Starting Exastro system..."
-    if [ "${DEP_PATTERN}" = "RHEL8" ]; then
-        systemctl --user start exastro
+    read -r -p "Deploy? (y/n) [default: n]: " confirm
+    echo ""
+    if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
+        if [ "${DEP_PATTERN}" = "RHEL8" ]; then
+            systemctl --user start exastro
+        else
+            cd ${PROJECT_DIR}
+            sudo -u $(id -u -n) -E ${DOCKER_COMPOSE} --profile ${COMPOSE_PROFILES:-all} -f ${COMPOSE_FILE} --env-file ${ENV_FILE} up -d
+        fi
     else
-        cd ${PROJECT_DIR}
-        sudo -u $(id -u -n) -E ${DOCKER_COMPOSE} --profile ${COMPOSE_PROFILES:-all} -f ${COMPOSE_FILE} --env-file ${ENV_FILE} up -d
+        info "Cancelled."
+        exit 0
     fi
 }
 
