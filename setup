@@ -546,6 +546,10 @@ check_resource() {
             printf "\r\033[3E\033[K" | tee -a "${LOG_FILE}"
             error "Lack of free space! Required at least ${REQUIRED_FREE_FOR_EXASTRO_DATA} MBytes free space on current directory."
         fi
+        sleep 1
+        printf "\r\033[3F\033[K$(date) [INFO]: Checking required resource.....................ok\n" | tee -a "${LOG_FILE}"
+        printf "\r\033[3E\033[K" | tee -a "${LOG_FILE}"
+        echo ""
     else
         # Check free space of /var
         info "'${HOME}' free space (MiB):      $(df -m "${HOME}" | awk 'NR==2 {print $4}')"
@@ -553,12 +557,13 @@ check_resource() {
             printf "\r\033[2F\033[K$(date) [INFO]: Checking required resource.....................ng\n" | tee -a "${LOG_FILE}"
             printf "\r\033[2E\033[K" | tee -a "${LOG_FILE}"
             error "Lack of free space! Required at least ${REQUIRED_FREE_FOR_CONTAINER_IMAGE} MBytes free space on ${HOME} directory."
+        else
+            sleep 1
+            printf "\r\033[3F\033[K$(date) [INFO]: Checking required resource.....................ok\n" | tee -a "${LOG_FILE}"
+            printf "\r\033[3E\033[K" | tee -a "${LOG_FILE}"
+            echo ""
         fi
     fi
-    sleep 1
-    printf "\r\033[4F\033[K$(date) [INFO]: Checking required resource.....................ok\n" | tee -a "${LOG_FILE}"
-    printf "\r\033[4E\033[K" | tee -a "${LOG_FILE}"
-    echo ""
 }
 
 ### Installation container engine
