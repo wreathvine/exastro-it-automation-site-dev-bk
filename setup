@@ -1004,7 +1004,7 @@ _EOF_
 ### Start Exastro system
 start_exastro() {
     info "Starting Exastro system..."
-    read -r -p "Deploy? (y/n) [default: n]: " confirm
+    read -r -p "Deploy Exastro containers now? (y/n) [default: n]: " confirm
     echo ""
     if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
         if [ "${DEP_PATTERN}" = "RHEL8" ]; then
