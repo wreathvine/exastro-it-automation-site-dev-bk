@@ -526,24 +526,24 @@ check_resource() {
     info "Total memory (KiB):           $(cat /proc/meminfo  | grep MemTotal | awk '{ print $2 }')"
     if [ $(cat /proc/meminfo  | grep MemTotal | awk '{ print $2 }') -lt ${REQUIRED_MEM_TOTAL} ]; then
         error "Lack of total memory! Required at least ${REQUIRED_MEM_TOTAL} Bytes total memory."
-        printf "\r\033[1F\033[K$(date) [INFO]: Checking required resource.....................ng\n" | tee -a "${LOG_FILE}"
-        printf "\r\033[1E\033[K" | tee -a "${LOG_FILE}"
+        printf "\r\033[2F\033[K$(date) [INFO]: Checking required resource.....................ng\n" | tee -a "${LOG_FILE}"
+        printf "\r\033[2E\033[K" | tee -a "${LOG_FILE}"
     fi
 
     if [ "${DEP_PATTERN}" != "RHEL8" ]; then
         # Check free space of /var
         info "'/var' free space (MiB):      $(df -m /var | awk 'NR==2 {print $4}')"
         if [ $(df -m /var | awk 'NR==2 {print $4}') -lt ${REQUIRED_FREE_FOR_CONTAINER_IMAGE} ]; then
-            printf "\r\033[2F\033[K$(date) [INFO]: Checking required resource.....................ng\n" | tee -a "${LOG_FILE}"
-            printf "\r\033[2E\033[K" | tee -a "${LOG_FILE}"
+            printf "\r\033[3F\033[K$(date) [INFO]: Checking required resource.....................ng\n" | tee -a "${LOG_FILE}"
+            printf "\r\033[3E\033[K" | tee -a "${LOG_FILE}"
             error "Lack of free space! Required at least ${REQUIRED_FREE_FOR_CONTAINER_IMAGE} MBytes free space on /var directory."
         fi
 
         # Check free space of current directory 
         info "'${HOME}' free space (MiB):         $(df -m "${HOME}" | awk 'NR==2 {print $4}')"
         if [ $(df -m "${HOME}"| awk 'NR==2 {print $4}') -lt ${REQUIRED_FREE_FOR_EXASTRO_DATA} ]; then
-            printf "\r\033[3F\033[K$(date) [INFO]: Checking required resource.....................ng\n" | tee -a "${LOG_FILE}"
-            printf "\r\033[3E\033[K" | tee -a "${LOG_FILE}"
+            printf "\r\033[4F\033[K$(date) [INFO]: Checking required resource.....................ng\n" | tee -a "${LOG_FILE}"
+            printf "\r\033[4E\033[K" | tee -a "${LOG_FILE}"
             error "Lack of free space! Required at least ${REQUIRED_FREE_FOR_EXASTRO_DATA} MBytes free space on current directory."
         fi
         sleep 1
@@ -554,8 +554,8 @@ check_resource() {
         # Check free space of /var
         info "'${HOME}' free space (MiB):      $(df -m "${HOME}" | awk 'NR==2 {print $4}')"
         if [ $(df -m ${HOME} | awk 'NR==2 {print $4}') -lt ${REQUIRED_FREE_FOR_CONTAINER_IMAGE} ]; then
-            printf "\r\033[2F\033[K$(date) [INFO]: Checking required resource.....................ng\n" | tee -a "${LOG_FILE}"
-            printf "\r\033[2E\033[K" | tee -a "${LOG_FILE}"
+            printf "\r\033[3F\033[K$(date) [INFO]: Checking required resource.....................ng\n" | tee -a "${LOG_FILE}"
+            printf "\r\033[3E\033[K" | tee -a "${LOG_FILE}"
             error "Lack of free space! Required at least ${REQUIRED_FREE_FOR_CONTAINER_IMAGE} MBytes free space on ${HOME} directory."
         else
             sleep 1
