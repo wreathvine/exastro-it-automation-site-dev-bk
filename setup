@@ -980,7 +980,7 @@ installation_cronjob() {
     crontab -l > $backup_file || :
 
     if ! grep -q "Exastro auto generate" $backup_file; then
-        crontab -l 2>/dev/null > $output_file
+        crontab -l 2>/dev/null > $output_file || :
         cat << _EOF_ >> $output_file
 ######## START Exastro auto generate (DO NOT REMOVE bellow lines.) ########
 0 * * * * cd ${PROJECT_DIR}; ${DOCKER_COMPOSE} --profile ${COMPOSE_PROFILES} run ita-by-execinstance-dataautoclean > /dev/null 2>&1
