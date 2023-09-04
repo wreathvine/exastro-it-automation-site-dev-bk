@@ -587,6 +587,7 @@ check_security() {
             exit 0
         fi
     fi
+    echo ""
 }
 
 ### Check required command
@@ -1087,15 +1088,28 @@ start_exastro() {
     echo ""
     if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
         if [ "${DEP_PATTERN}" = "RHEL8" ]; then
-            systemctl --user start exastro
+            systemctl --user start exastro &
+            pid1=$!
         else
             cd ${PROJECT_DIR}
-            sudo -u $(id -u -n) -E ${DOCKER_COMPOSE} --profile ${COMPOSE_PROFILES:-all} -f ${COMPOSE_FILE} --env-file ${ENV_FILE} up -d
+            sudo -u $(id -u -n) -E ${DOCKER_COMPOSE} --profile ${COMPOSE_PROFILES:-all} -f ${COMPOSE_FILE} --env-file ${ENV_FILE} up -d &
+            pid1=$!
         fi
     else
         info "Cancelled."
         exit 0
     fi
+    # printf "\r\033[2KPlease wait installation completed.";
+    # while true;
+    # do
+    #     sleep 0.1
+    #     printf ".";
+    # done &
+    # pid2=$!
+    # wait $pid1
+    # printf "Complete!\n"
+    # kill $pid2
+    # wait $pid2 2> /dev/null
 }
 
 ### Display Exastro system information
@@ -1233,11 +1247,17 @@ remove_cronjob() {
 remove_service() {
     info "Stopping and removing Exastro service..."
     cd ${PROJECT_DIR}
+ 
+    DOCKER_COMPOSE="docker compose"
+    if [ "${DEP_PATTERN}" = "RHEL8" ]; then
+        DOCKER_COMPOSE="podman unshare docker-compose"
+    fi
+
     ${DOCKER_COMPOSE} --profile all down
     if [ "${DEP_PATTERN}" = "RHEL8" ]; then
         systemctl --user disable --now exastro
-        systemctl --user daemon-reload
         rm -f ${HOME}/.config/systemd/user/exastro.service
+        systemctl --user daemon-reload
     fi
     info "Remove Exastro service completed."
 }
@@ -1246,9 +1266,13 @@ remove_service() {
 remove_exastro_data() {
         info "Deleting Exastro system..."
         cd ${PROJECT_DIR}
+        DOCKER_COMPOSE="docker compose"
+        if [ "${DEP_PATTERN}" = "RHEL8" ]; then
+            DOCKER_COMPOSE="podman unshare docker-compose"
+        fi
         ${DOCKER_COMPOSE} --profile all down -v
         sudo rm -rf ${PROJECT_DIR}/.volumes/storage/*
-        yes | docker system prune
+        # yes | docker system prune
 }
 
 main "$@"
