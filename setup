@@ -1088,11 +1088,11 @@ start_exastro() {
     echo ""
     if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
         if [ "${DEP_PATTERN}" = "RHEL8" ]; then
-            systemctl --user start exastro &
+            systemctl --user start exastro
             pid1=$!
         else
             cd ${PROJECT_DIR}
-            sudo -u $(id -u -n) -E ${DOCKER_COMPOSE} --profile ${COMPOSE_PROFILES:-all} -f ${COMPOSE_FILE} --env-file ${ENV_FILE} up -d &
+            sudo -u $(id -u -n) -E ${DOCKER_COMPOSE} --profile ${COMPOSE_PROFILES:-all} -f ${COMPOSE_FILE} --env-file ${ENV_FILE} up -d
             pid1=$!
         fi
     else
