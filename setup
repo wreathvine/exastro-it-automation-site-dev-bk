@@ -477,6 +477,7 @@ _EOF_
 ### Check requirements
 check_requirement() {
     check_system
+    check_security
     check_command
     check_resource
 }
@@ -526,6 +527,57 @@ check_system() {
     echo ""
 }
 
+### Check system requirements
+check_security() {
+    printf "$(date) [INFO]: Checking running security services.............\n" | tee -a "${LOG_FILE}"
+    SELINUX_STATUS=$(sudo getenforce 2>/dev/null || :)
+    if [ "${SELINUX_STATUS}" = "Enforcing" ]; then
+        printf "\r\033[1F\033[K$(date) [INFO]: Checking running security services.............check\n" | tee -a "${LOG_FILE}"
+        printf "\r\033[1E\033[K" | tee -a "${LOG_FILE}"
+        warn "SELinux is now Enforcing."
+        SELINUX_STATUS="active"
+    else
+        info "SELinux is not Enforcing."
+        SELINUX_STATUS="inactive"
+    fi
+
+    FIREWALLD_STATUS=$(sudo firewall-cmd --state 2>/dev/null || :)
+    if [ "${FIREWALLD_STATUS}" = "Running" ]; then
+        printf "\r\033[2F\033[K$(date) [INFO]: Checking running security services.............check\n" | tee -a "${LOG_FILE}"
+        printf "\r\033[2E\033[K" | tee -a "${LOG_FILE}"
+        warn "Firewalld is now running."
+        FIREWALLD_STATUS="active"
+    else
+        info "Firewalld is not running."
+        FIREWALLD_STATUS="inactive"
+    fi
+
+    UFW_STATUS=$(sudo ufw status 2>/dev/null || :) 
+    if [ $(echo "${UFW_STATUS}" | grep -qi "status: active") ]; then
+        printf "\r\033[3F\033[K$(date) [INFO]: Checking running security services.............check\n" | tee -a "${LOG_FILE}"
+        printf "\r\033[3E\033[K" | tee -a "${LOG_FILE}"
+        warn "UFW is now active."
+        UFW_STATUS="active"
+    else
+        info "UFW is inactive."
+        UFW_STATUS="inactive"
+    fi
+
+    if [ "${SELINUX_STATUS}" = "active" ] || [ "${FIREWALLD_STATUS}" = "active" ] || [ "${UFW_STATUS}" = "active" ]; then
+        echo ""
+        echo "Security service is active."
+        read -r -p "Are you sure you want to continue processing? (y/n) [default: n]: " confirm
+        echo ""
+        if ! (echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"); then
+            info "Cancelled."
+            exit 0
+        fi
+    fi
+    sleep 1
+    printf "\r\033[4F\033[K$(date) [INFO]: Checking required commands.............ok\n" | tee -a "${LOG_FILE}"
+    printf "\r\033[4E\033[K" | tee -a "${LOG_FILE}"
+}
+
 ### Check required command
 check_command() {
     printf "$(date) [INFO]: Checking required commands.....................\n" | tee -a "${LOG_FILE}"
@@ -537,7 +589,7 @@ check_command() {
         error "Required 'sudo' command and $(id -u -n) is appended to sudoers."
     fi
     sleep 1
-    printf "\r\033[2F\033[K$(date) [INFO]: Checking required commands.....................ok\n" | tee -a "${LOG_FILE}"
+    printf "\r\033[2F\033[K$(date) [INFO]: Checking running security services.............ok\n" | tee -a "${LOG_FILE}"
     printf "\r\033[2E\033[K" | tee -a "${LOG_FILE}"
     echo ""
 }
@@ -885,11 +937,20 @@ Manegement URL:                   ${EXTERNAL_URL_MNG_PROTOCOL}://${EXTERNAL_URL_
 Docker GID:                       ${HOST_DOCKER_GID}
 Docker Socket path:               ${HOST_DOCKER_SOCKET_PATH}
 GitLab deployment:                $(if [ ${COMPOSE_PROFILES} = "all" ]; then echo "true"; else echo "false"; fi)
-GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${EXTERNAL_URL_PORT}
+_EOF_
+        if [ ${COMPOSE_PROFILES} = "all" ]; then
+            cat <<_EOF_
+GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:40080
 GitLab root password:             ********
 GitLab root token:                ********
 
 _EOF_
+        else
+            cat <<_EOF_
+GitLab URL:                       None
+
+_EOF_
+        fi
 
         read -r -p "Generate .env file by bellow setting? (y/n) [default: n]: " confirm
         echo ""
@@ -901,9 +962,13 @@ _EOF_
             info "Manegement URL:                   ${EXTERNAL_URL_MNG_PROTOCOL}://${EXTERNAL_URL_MNG_HOST}:${EXTERNAL_URL_MNG_PORT}"
             info "Docker GID:                       ${HOST_DOCKER_GID}"
             info "Docker Socket path:               ${HOST_DOCKER_SOCKET_PATH}"
-            info "GitLab deployment:                $(if [ ${COMPOSE_PROFILES} = "all" ]; then echo "true"; else echo "false"; fi)"
-            info "GitLab root password:             ********"
-            info "GitLab root token:                ********"
+            if [ ${COMPOSE_PROFILES} == "all" ]; then
+                info "GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:40080"
+                info "GitLab root password:             ********"
+                info "GitLab root token:                ********"
+            else
+                info "GitLab URL:                       None"
+            fi
             
             generate_env
             break
@@ -935,7 +1000,9 @@ generate_env() {
     sed -i -e "s/^COMPOSE_PROFILES=.*/COMPOSE_PROFILES=${COMPOSE_PROFILES}/" ${ENV_FILE}
     sed -i -e "s/^GITLAB_ROOT_PASSWORD=.*/GITLAB_ROOT_PASSWORD=${GITLAB_ROOT_PASSWORD}/" ${ENV_FILE}
     sed -i -e "s/^GITLAB_ROOT_TOKEN=.*/GITLAB_ROOT_TOKEN=${GITLAB_ROOT_TOKEN}/" ${ENV_FILE}
-    sed -i -e "s/^GITLAB_HOST=.*/GITLAB_HOST=${EXTERNAL_URL_HOST}/" ${ENV_FILE}
+    if [ ${COMPOSE_PROFILES} = "all" ]; then
+        sed -i -e "s/^GITLAB_HOST=.*/GITLAB_HOST=${EXTERNAL_URL_HOST}/" ${ENV_FILE}
+    fi
 }
 
 ### Installation Exastro
