@@ -574,7 +574,7 @@ check_security() {
     fi
 
     sleep 1
-    printf "\r\033[4F\033[K$(date) [INFO]: Checking required commands.....................ok\n" | tee -a "${LOG_FILE}"
+    printf "\r\033[4F\033[K$(date) [INFO]: Checking running security services.............ok\n" | tee -a "${LOG_FILE}"
     printf "\r\033[4E\033[K" | tee -a "${LOG_FILE}"
 
     if [ "${SELINUX_STATUS}" = "active" ] || [ "${FIREWALLD_STATUS}" = "active" ] || [ "${UFW_STATUS}" = "active" ]; then
