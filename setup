@@ -577,16 +577,16 @@ check_security() {
     printf "\r\033[4F\033[K$(date) [INFO]: Checking running security services.............ok\n" | tee -a "${LOG_FILE}"
     printf "\r\033[4E\033[K" | tee -a "${LOG_FILE}"
 
-    if [ "${SELINUX_STATUS}" = "active" ] || [ "${FIREWALLD_STATUS}" = "active" ] || [ "${UFW_STATUS}" = "active" ]; then
-        echo ""
-        echo "Security service is active."
-        read -r -p "Are you sure you want to continue processing? (y/n) [default: n]: " confirm
-        echo ""
-        if ! (echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"); then
-            info "Cancelled."
-            exit 0
-        fi
-    fi
+    # if [ "${SELINUX_STATUS}" = "active" ] || [ "${FIREWALLD_STATUS}" = "active" ] || [ "${UFW_STATUS}" = "active" ]; then
+    #     echo ""
+    #     echo "Security service is active."
+    #     read -r -p "Are you sure you want to continue processing? (y/n) [default: n]: " confirm
+    #     echo ""
+    #     if ! (echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"); then
+    #         info "Cancelled."
+    #         exit 0
+    #     fi
+    # fi
     echo ""
 }
 
@@ -904,6 +904,7 @@ setup() {
         echo ""
         if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
             COMPOSE_PROFILES=all
+            EXTERNAL_URL_GITLAB_PORT="40080"
             if [ ${PWD_METHOD} = "manually" ]; then
                 while true; do
                     read -r -p "GitLab root password: " password1
@@ -953,7 +954,7 @@ GitLab deployment:                $(if [ ${COMPOSE_PROFILES} = "all" ]; then ech
 _EOF_
         if [ "${COMPOSE_PROFILES}" = "all" ]; then
             cat <<_EOF_
-GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:40080
+GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${EXTERNAL_URL_GITLAB_PORT}
 GitLab root password:             ********
 GitLab root token:                ********
 
@@ -976,7 +977,7 @@ _EOF_
             info "Docker GID:                       ${HOST_DOCKER_GID}"
             info "Docker Socket path:               ${HOST_DOCKER_SOCKET_PATH}"
             if [ "${COMPOSE_PROFILES}" = "all" ]; then
-                info "GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:40080"
+                info "GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${EXTERNAL_URL_GITLAB_PORT}"
                 info "GitLab root password:             ********"
                 info "GitLab root token:                ********"
             else
@@ -1026,6 +1027,7 @@ installation_exastro() {
     fi
     DOCKER_COMPOSE=$(command -v docker)" compose"
     installation_cronjob
+    installtion_firewall_rules
 }
 
 ### Installation Exastro on RHEL8
@@ -1081,6 +1083,33 @@ _EOF_
     fi
 }
 
+### Installation Firewall rules
+installtion_firewall_rules() {
+    info "Add firewall rules."
+    if [ ${FIREWALLD_STATUS} = "active" ]; then
+        info "Add ${EXTERNAL_URL_PORT}/tcp for external service port."
+        sudo firewall-cmd --add-port=${EXTERNAL_URL_PORT}/tcp --zone=public --permanent
+        info "Add ${EXTERNAL_URL_MNG_PORT}/tcp for external management port."
+        sudo firewall-cmd --add-port=${EXTERNAL_URL_MNG_PORT}/tcp --zone=public --permanent
+        if [ ${COMPOSE_PROFILES} = "all" ]; then
+            info "Add ${EXTERNAL_URL_GITLAB_PORT}/tcp for external GitLab port."
+            sudo firewall-cmd --add-port=${EXTERNAL_URL_GITLAB_PORT}/tcp --zone=public --permanent
+        fi
+        sudo firewall-cmd --reload
+    fi
+    if [ ${UFW_STATUS} = "active" ]; then
+        info "Add ${EXTERNAL_URL_PORT}/tcp for external service port."
+        sudo ufw allow ${EXTERNAL_URL_PORT}/tcp
+        info "Add ${EXTERNAL_URL_MNG_PORT}/tcp for external management port."
+        sudo ufw allow ${EXTERNAL_URL_MNG_PORT}/tcp
+        if [ ${COMPOSE_PROFILES} = "all" ]; then
+            info "Add ${EXTERNAL_URL_GITLAB_PORT}/tcp for external GitLab port."
+            sudo ufw allow ${EXTERNAL_URL_GITLAB_PORT}/tcp
+        fi
+        sudo ufw reload
+    fi
+}
+
 ### Start Exastro system
 start_exastro() {
     info "Starting Exastro system..."
@@ -1126,7 +1155,7 @@ Organization page:
   URL:                ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${EXTERNAL_URL_PORT}/{{ Organization ID }}/platform
 
 GitLab page:
-  URL:                ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:40080
+  URL:                ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${EXTERNAL_URL_GITLAB_PORT}
   Login user:         root
   Initial password:   ${GITLAB_ROOT_PASSWORD}
 
@@ -1178,6 +1207,8 @@ _EOF_
         if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
             remove_cronjob
             remove_service
+            check_security
+            remove_firewall_rules
         else
             info "Cancelled."
             exit 0
@@ -1193,6 +1224,8 @@ _EOF_
         if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
             remove_cronjob
             remove_service
+            check_security
+            remove_firewall_rules
             remove_exastro_data
         else
             info "Cancelled."
@@ -1260,6 +1293,33 @@ remove_service() {
         systemctl --user daemon-reload
     fi
     info "Remove Exastro service completed."
+}
+
+### Installation Firewall rules
+remove_firewall_rules() {
+    info "Remove firewall rules."
+    if [ ${FIREWALLD_STATUS} = "active" ]; then
+        info "Remove ${EXTERNAL_URL_PORT}/tcp for external service port."
+        sudo firewall-cmd --remove-port=${EXTERNAL_URL_PORT}/tcp --zone=public --permanent
+        info "Remove ${EXTERNAL_URL_MNG_PORT}/tcp for external management port."
+        sudo firewall-cmd --remove-port=${EXTERNAL_URL_MNG_PORT}/tcp --zone=public --permanent
+        if [ ${COMPOSE_PROFILES} = "all" ]; then
+            info "Remove ${EXTERNAL_URL_GITLAB_PORT}/tcp for external GitLab port."
+            sudo firewall-cmd --remove-port=${EXTERNAL_URL_GITLAB_PORT}/tcp --zone=public --permanent
+        fi
+        sudo firewall-cmd --reload
+    fi
+    if [ ${UFW_STATUS} = "active" ]; then
+        info "Remove ${EXTERNAL_URL_PORT}/tcp for external service port."
+        sudo ufw deny ${EXTERNAL_URL_PORT}/tcp
+        info "Remove ${EXTERNAL_URL_MNG_PORT}/tcp for external management port."
+        sudo ufw deny ${EXTERNAL_URL_MNG_PORT}/tcp
+        if [ ${COMPOSE_PROFILES} = "all" ]; then
+            info "Remove ${EXTERNAL_URL_GITLAB_PORT}/tcp for external GitLab port."
+            sudo ufw deny ${EXTERNAL_URL_GITLAB_PORT}/tcp
+        fi
+        sudo ufw reload
+    fi
 }
 
 ### Remove all containers and data
