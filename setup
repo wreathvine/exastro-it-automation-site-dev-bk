@@ -532,16 +532,19 @@ check_security() {
     printf "$(date) [INFO]: Checking running security services.............\n" | tee -a "${LOG_FILE}"
     SELINUX_STATUS=$(sudo getenforce 2>/dev/null || :)
     if [ "${SELINUX_STATUS}" = "Enforcing" ]; then
-        SELINUX_STATUS="active"
         info "SELinux is now Enforcing."
+        SELINUX_STATUS="inactive"
         if [ "${DEP_PATTERN}" != "RHEL8" ]; then
+            SELINUX_STATUS="active"
             printf "\r\033[2F\033[K$(date) [INFO]: Checking running security services.............check\n" | tee -a "${LOG_FILE}"
             printf "\r\033[2E\033[K" | tee -a "${LOG_FILE}"
         fi
     else
         SELINUX_STATUS="inactive"
         info "SELinux is not Enforcing."
+        SELINUX_STATUS="inactive"
         if [ "${DEP_PATTERN}" = "RHEL8" ]; then
+            SELINUX_STATUS="active"
             printf "\r\033[2F\033[K$(date) [INFO]: Checking running security services.............ng\n" | tee -a "${LOG_FILE}"
             printf "\r\033[2E\033[K" | tee -a "${LOG_FILE}"
             error "SELinux is must be Enforcing on Rootless Podman."
@@ -570,6 +573,10 @@ check_security() {
         UFW_STATUS="inactive"
     fi
 
+    sleep 1
+    printf "\r\033[4F\033[K$(date) [INFO]: Checking required commands.....................ok\n" | tee -a "${LOG_FILE}"
+    printf "\r\033[4E\033[K" | tee -a "${LOG_FILE}"
+
     if [ "${SELINUX_STATUS}" = "active" ] || [ "${FIREWALLD_STATUS}" = "active" ] || [ "${UFW_STATUS}" = "active" ]; then
         echo ""
         echo "Security service is active."
@@ -580,9 +587,6 @@ check_security() {
             exit 0
         fi
     fi
-    sleep 1
-    printf "\r\033[4F\033[K$(date) [INFO]: Checking required commands.............ok\n" | tee -a "${LOG_FILE}"
-    printf "\r\033[4E\033[K" | tee -a "${LOG_FILE}"
 }
 
 ### Check required command
