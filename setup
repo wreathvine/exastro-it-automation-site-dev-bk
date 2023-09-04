@@ -952,7 +952,7 @@ GitLab URL:                       None
 _EOF_
         fi
 
-        read -r -p "Generate .env file by bellow setting? (y/n) [default: n]: " confirm
+        read -r -p "Generate .env file by above settings? (y/n) [default: n]: " confirm
         echo ""
         if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
             info "Generate settig file [${PWD}/.env]."
