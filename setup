@@ -533,22 +533,19 @@ check_security() {
     SELINUX_STATUS=$(sudo getenforce 2>/dev/null || :)
     if [ "${SELINUX_STATUS}" = "Enforcing" ]; then
         SELINUX_STATUS="active"
-        if [ "${DEP_PATTERN}" = "RHEL8" ]; then
-            printf "\r\033[1F\033[K$(date) [INFO]: Checking running security services.............ok\n" | tee -a "${LOG_FILE}"
-            printf "\r\033[1E\033[K" | tee -a "${LOG_FILE}"
-        else
-            printf "\r\033[1F\033[K$(date) [INFO]: Checking running security services.............check\n" | tee -a "${LOG_FILE}"
-            printf "\r\033[1E\033[K" | tee -a "${LOG_FILE}"
-            warn "SELinux is now Enforcing."
+        warn "SELinux is now Enforcing."
+        if [ "${DEP_PATTERN}" != "RHEL8" ]; then
+            printf "\r\033[2F\033[K$(date) [INFO]: Checking running security services.............check\n" | tee -a "${LOG_FILE}"
+            printf "\r\033[2E\033[K" | tee -a "${LOG_FILE}"
         fi
     else
         SELINUX_STATUS="inactive"
         info "SELinux is not Enforcing."
         if [ "${DEP_PATTERN}" = "RHEL8" ]; then
-            printf "\r\033[1F\033[K$(date) [INFO]: Checking running security services.............ng\n" | tee -a "${LOG_FILE}"
-            printf "\r\033[1E\033[K" | tee -a "${LOG_FILE}"
+            printf "\r\033[2F\033[K$(date) [INFO]: Checking running security services.............ng\n" | tee -a "${LOG_FILE}"
+            printf "\r\033[2E\033[K" | tee -a "${LOG_FILE}"
             error "SELinux is must be Enforcing on Rootless Podman."
-        else
+        fi
     fi
 
     FIREWALLD_STATUS=$(sudo firewall-cmd --state 2>/dev/null || :)
