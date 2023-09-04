@@ -767,6 +767,7 @@ fetch_exastro() {
         git clone https://github.com/exastro-suite/exastro-docker-compose.git
         if [ "${DEP_PATTERN}" = "RHEL8" ]; then
             podman unshare chown $(id -u):$(id -g) "${PROJECT_DIR}/.volumes/storage/"
+            sudo chcon -R -h -t container_file_t "${PROJECT_DIR}/.volumes/storage/"
         fi
     fi
 }
