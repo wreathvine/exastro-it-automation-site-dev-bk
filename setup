@@ -552,7 +552,7 @@ check_security() {
     fi
 
     FIREWALLD_STATUS=$(sudo firewall-cmd --state 2>/dev/null || :)
-    if [ "${FIREWALLD_STATUS}" = "Running" ]; then
+    if echo "${FIREWALLD_STATUS}" | grep -qi "running"; then
         printf "\r\033[2F\033[K$(date) [INFO]: Checking running security services.............check\n" | tee -a "${LOG_FILE}"
         printf "\r\033[2E\033[K" | tee -a "${LOG_FILE}"
         warn "Firewalld is now running."
@@ -563,7 +563,7 @@ check_security() {
     fi
 
     UFW_STATUS=$(sudo ufw status 2>/dev/null || :) 
-    if [ $(echo "${UFW_STATUS}" | grep -qi "status: active") ]; then
+    if echo "${UFW_STATUS}" | grep -qi "status: active"; then
         printf "\r\033[3F\033[K$(date) [INFO]: Checking running security services.............check\n" | tee -a "${LOG_FILE}"
         printf "\r\033[3E\033[K" | tee -a "${LOG_FILE}"
         warn "UFW is now active."
