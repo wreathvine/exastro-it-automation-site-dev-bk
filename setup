@@ -938,7 +938,7 @@ Docker GID:                       ${HOST_DOCKER_GID}
 Docker Socket path:               ${HOST_DOCKER_SOCKET_PATH}
 GitLab deployment:                $(if [ ${COMPOSE_PROFILES} = "all" ]; then echo "true"; else echo "false"; fi)
 _EOF_
-        if [ ${COMPOSE_PROFILES} = "all" ]; then
+        if [ "${COMPOSE_PROFILES}" = "all" ]; then
             cat <<_EOF_
 GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:40080
 GitLab root password:             ********
@@ -962,7 +962,7 @@ _EOF_
             info "Manegement URL:                   ${EXTERNAL_URL_MNG_PROTOCOL}://${EXTERNAL_URL_MNG_HOST}:${EXTERNAL_URL_MNG_PORT}"
             info "Docker GID:                       ${HOST_DOCKER_GID}"
             info "Docker Socket path:               ${HOST_DOCKER_SOCKET_PATH}"
-            if [ ${COMPOSE_PROFILES} == "all" ]; then
+            if [ "${COMPOSE_PROFILES}" = "all" ]; then
                 info "GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:40080"
                 info "GitLab root password:             ********"
                 info "GitLab root token:                ********"
