@@ -1153,11 +1153,18 @@ System manager page:
 
 Organization page:
   URL:                ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${EXTERNAL_URL_PORT}/{{ Organization ID }}/platform
+_EOF_
+    if [ "${COMPOSE_PROFILES}" = "all" ]; then
+        cat <<_EOF_
 
 GitLab page:
   URL:                ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${EXTERNAL_URL_GITLAB_PORT}
   Login user:         root
   Initial password:   ${GITLAB_ROOT_PASSWORD}
+_EOF_
+fi
+
+    cat<<_EOF_
 
 
 Run creation organization command:
