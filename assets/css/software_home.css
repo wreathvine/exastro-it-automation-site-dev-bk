@@ -84,9 +84,72 @@ font-size: 16px;
 color: #FFF;
 }
 
+.install-command-title {
+margin-top: 32px;
+line-height: 1.75;
+font-size: 24px;
+font-weight: bold;
+color: #DDD;
+letter-spacing: .025em;
+}
+.install-command-title i.fa-download {
+color: #AAA;
+}
+.install-command-wrap {
+margin: 8px auto 12px;
+padding: 1px;
+border-radius: 4px;
+background-image: linear-gradient( 45deg, Magenta, yellow, Cyan, Magenta);
+background-size: 200%;
+animation: installCommand 2s linear infinite;
+box-shadow: 8px 8px 4px rgb(0 0 0 / 40%);
+
+}
+@keyframes installCommand {
+to { background-position-x: 200%; }
+}
+.install-command {
+display: block;
+position: relative;
+padding: 16px 48px 16px 16px;
+background: #111;
+border-radius: 4px;
+line-height: 1.2;
+color: #AF0;
+white-space: pre-wrap;
+font-family: "Osaka-mono", "MS Gothic", "monospace";
+}
+.install-command i.fa-copy {
+position: absolute;
+right: 16px; top: 50%;
+transform: translateY(-50%);
+font-size: 18px;
+color: #AAA;
+}
+.install-command:hover {
+color: #999;
+}
+.install-command:hover i.fa-copy {
+color: #666;
+}
+.install-command-note {
+line-height: 1.75;
+font-size: 14px;
+color: #DDD;
+}
+.install-command-link {
+color: #FFA500;
+}
+.install-command-link.hover {
+text-decoration: none;
+color: #FFCC00;
+}
+
 
 .header-menu {
 flex: 1 1 60%;
+display: flex;
+align-items: center;
 }
 .header-menu-list {
 display: flex;
