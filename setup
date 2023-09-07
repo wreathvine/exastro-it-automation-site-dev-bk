@@ -904,7 +904,7 @@ setup() {
         echo ""
         if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
             COMPOSE_PROFILES=all
-            EXTERNAL_URL_GITLAB_PORT="40080"
+            GITLAB_PORT="40080"
             if [ ${PWD_METHOD} = "manually" ]; then
                 while true; do
                     read -r -p "GitLab root password: " password1
@@ -954,7 +954,7 @@ GitLab deployment:                $(if [ ${COMPOSE_PROFILES} = "all" ]; then ech
 _EOF_
         if [ "${COMPOSE_PROFILES}" = "all" ]; then
             cat <<_EOF_
-GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${EXTERNAL_URL_GITLAB_PORT}
+GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${GITLAB_PORT}
 GitLab root password:             ********
 GitLab root token:                ********
 
@@ -977,7 +977,7 @@ _EOF_
             info "Docker GID:                       ${HOST_DOCKER_GID}"
             info "Docker Socket path:               ${HOST_DOCKER_SOCKET_PATH}"
             if [ "${COMPOSE_PROFILES}" = "all" ]; then
-                info "GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${EXTERNAL_URL_GITLAB_PORT}"
+                info "GitLab URL:                       ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${GITLAB_PORT}"
                 info "GitLab root password:             ********"
                 info "GitLab root token:                ********"
             else
@@ -1016,6 +1016,7 @@ generate_env() {
     sed -i -e "s/^GITLAB_ROOT_TOKEN=.*/GITLAB_ROOT_TOKEN=${GITLAB_ROOT_TOKEN}/" ${ENV_FILE}
     if [ ${COMPOSE_PROFILES} = "all" ]; then
         sed -i -e "s/^GITLAB_HOST=.*/GITLAB_HOST=${EXTERNAL_URL_HOST}/" ${ENV_FILE}
+        sed -i -e "/^# GITLAB_PORT=.*/a GITLAB_PORT=${GITLAB_PORT}" ${ENV_FILE}
     fi
 }
 
@@ -1092,8 +1093,8 @@ installtion_firewall_rules() {
         info "Add ${EXTERNAL_URL_MNG_PORT}/tcp for external management port."
         sudo firewall-cmd --add-port=${EXTERNAL_URL_MNG_PORT}/tcp --zone=public --permanent
         if [ ${COMPOSE_PROFILES} = "all" ]; then
-            info "Add ${EXTERNAL_URL_GITLAB_PORT}/tcp for external GitLab port."
-            sudo firewall-cmd --add-port=${EXTERNAL_URL_GITLAB_PORT}/tcp --zone=public --permanent
+            info "Add ${GITLAB_PORT}/tcp for external GitLab port."
+            sudo firewall-cmd --add-port=${GITLAB_PORT}/tcp --zone=public --permanent
         fi
         sudo firewall-cmd --reload
     fi
@@ -1103,8 +1104,8 @@ installtion_firewall_rules() {
         info "Add ${EXTERNAL_URL_MNG_PORT}/tcp for external management port."
         sudo ufw allow ${EXTERNAL_URL_MNG_PORT}/tcp
         if [ ${COMPOSE_PROFILES} = "all" ]; then
-            info "Add ${EXTERNAL_URL_GITLAB_PORT}/tcp for external GitLab port."
-            sudo ufw allow ${EXTERNAL_URL_GITLAB_PORT}/tcp
+            info "Add ${GITLAB_PORT}/tcp for external GitLab port."
+            sudo ufw allow ${GITLAB_PORT}/tcp
         fi
         sudo ufw reload
     fi
@@ -1116,6 +1117,7 @@ start_exastro() {
     read -r -p "Deploy Exastro containers now? (y/n) [default: n]: " confirm
     echo ""
     if echo $confirm | grep -q -e "[yY]" -e "[yY][eE][sS]"; then
+        echo "Please wait for a little while. It will take 10 minutes or later.........."
         if [ "${DEP_PATTERN}" = "RHEL8" ]; then
             systemctl --user start exastro
             # pid1=$!
@@ -1146,6 +1148,7 @@ prompt() {
     banner
     cat<<_EOF_
 
+
 System manager page:
   URL:                ${EXTERNAL_URL_MNG_PROTOCOL}://${EXTERNAL_URL_MNG_HOST}:${EXTERNAL_URL_MNG_PORT}/auth/
   Login user:         admin
@@ -1153,22 +1156,44 @@ System manager page:
 
 Organization page:
   URL:                ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${EXTERNAL_URL_PORT}/{{ Organization ID }}/platform
+
 _EOF_
     if [ "${COMPOSE_PROFILES}" = "all" ]; then
         cat <<_EOF_
 
+
+Make sure you can successfully access the GitLab login screen.
+
+Wait until the GitLab container has completely started before creating the organization.
+It may take more than 5 minutes.
+
+If you are unable to access due to a 503 error, please wait a while and try again.
+
 GitLab page:
-  URL:                ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${EXTERNAL_URL_GITLAB_PORT}
+  URL:                ${EXTERNAL_URL_PROTOCOL}://${EXTERNAL_URL_HOST}:${GITLAB_PORT}
   Login user:         root
   Initial password:   ${GITLAB_ROOT_PASSWORD}
+
 _EOF_
+    while [ $(curl -s -I -o nul -w "%{http_code}" ${GITLAB_PROTOCOL:-http}://${GITLAB_HOST:-localhost}:${GITLAB_PORT:-40080}/users/sign_in) -ne 200 ]; do
+        echo "GitLab service is not ready."
+        sleep 1
+    done
+    echo "GitLab service is has completely started!"
+
 fi
 
     cat<<_EOF_
 
-
 Run creation organization command:
    bash ${PROJECT_DIR}/create-organization.sh 
+
+
+! ! ! ! ! ! ! ! ! ! ! ! ! ! !
+! ! !   C A U T I O N   ! ! !
+! ! ! ! ! ! ! ! ! ! ! ! ! ! !
+
+Be sure to reboot the you host operating system to ensure proper system operation.
 
 _EOF_
 }
@@ -1311,8 +1336,8 @@ remove_firewall_rules() {
         info "Remove ${EXTERNAL_URL_MNG_PORT}/tcp for external management port."
         sudo firewall-cmd --remove-port=${EXTERNAL_URL_MNG_PORT}/tcp --zone=public --permanent
         if [ ${COMPOSE_PROFILES} = "all" ]; then
-            info "Remove ${EXTERNAL_URL_GITLAB_PORT}/tcp for external GitLab port."
-            sudo firewall-cmd --remove-port=${EXTERNAL_URL_GITLAB_PORT}/tcp --zone=public --permanent
+            info "Remove ${GITLAB_PORT}/tcp for external GitLab port."
+            sudo firewall-cmd --remove-port=${GITLAB_PORT}/tcp --zone=public --permanent
         fi
         sudo firewall-cmd --reload
     fi
@@ -1322,8 +1347,8 @@ remove_firewall_rules() {
         info "Remove ${EXTERNAL_URL_MNG_PORT}/tcp for external management port."
         sudo ufw deny ${EXTERNAL_URL_MNG_PORT}/tcp
         if [ ${COMPOSE_PROFILES} = "all" ]; then
-            info "Remove ${EXTERNAL_URL_GITLAB_PORT}/tcp for external GitLab port."
-            sudo ufw deny ${EXTERNAL_URL_GITLAB_PORT}/tcp
+            info "Remove ${GITLAB_PORT}/tcp for external GitLab port."
+            sudo ufw deny ${GITLAB_PORT}/tcp
         fi
         sudo ufw reload
     fi
